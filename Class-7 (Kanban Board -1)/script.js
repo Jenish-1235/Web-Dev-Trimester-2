@@ -18,6 +18,9 @@ addBtn.addEventListener("click", function () {
   addBtnFlag = !addBtnFlag;
   if (addBtnFlag) {
     modalCont.style.display = "flex";
+    // automatically turn of the delete mode
+    deleteBtnFlag = false
+    deleteBtn.classList.remove('active')
   } else {
     // Hide The modal pop up
     modalCont.style.display = "none";
@@ -37,8 +40,6 @@ function createTicket(taskColor , task, id) {
               </div>`;
 
               mainCont.appendChild(ticketCont)
-
-
 }
 
 // get data for the ticket on modal event
@@ -68,6 +69,50 @@ allPriorityColors.forEach(function(colorElem){
      modalTaskColor = colorElem.classList[0] // lightgreen
      console.log(modalTaskColor)
    })
-
- 
 })
+
+// function to edit the ticket
+mainCont.addEventListener('dblclick' , function(e){
+  if(e.target.classList.contains('task-area')){
+    let task = e.target
+    let idElem = task.nextElementSibling
+    task.setAttribute('contenteditable' , true)
+    task.focus()
+    task.addEventListener('blur' , function(){
+      task.setAttribute('contenteditable' , false)
+    })
+  }
+})
+
+// function to lock the ticket
+mainCont.addEventListener('click' , function(e){
+  if(e.target.classList.contains('ticket-lock')){
+    e.target.classList.toggle('active')
+  }
+})
+
+
+// turn on delete mode when bin button is pressed and then delete the ticket
+let deleteBtn = document.querySelector('.remove-btn')
+let deleteBtnFlag = false
+deleteBtn.addEventListener('click' , function(){
+  deleteBtnFlag = !deleteBtnFlag
+  if(deleteBtnFlag){
+    deleteBtn.classList.add('active')
+    alert('Delete Mode On')
+  }else{
+    deleteBtn.classList.remove('active')
+    alert('Delete Mode Off')
+  }
+})
+
+mainCont.addEventListener('click' , function(e){
+  if(deleteBtnFlag){
+    if(e.target.classList.contains('ticket-cont')){
+      e.target.remove()
+    }
+  }
+})
+
+
+
